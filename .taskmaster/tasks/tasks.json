@@ -1,0 +1,199 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Setup Project Repository and Infrastructure",
+        "description": "Initialize project repository with proper scaffolding, dependencies, and deployment configuration",
+        "details": "Create Next.js project with TypeScript, install dependencies (Prisma, TanStack Query, Tailwind CSS, NextAuth.js, Zod), setup ESLint strict configuration, configure Vitest for testing with ≥90% coverage target, setup GitHub Actions CI/CD pipeline, configure Fly.io deployment with <60s deploy time, setup Docker configuration, create .env.example with required variables including JWT secret ≥64 hex chars",
+        "testStrategy": "Verify project builds successfully, ESLint passes with strict rules, CI pipeline runs without errors, deployment to Fly.io completes in <60s, /healthz endpoint returns 200",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Initialize Next.js project with TypeScript and core dependencies",
+            "description": "Create new Next.js project with TypeScript configuration and install essential dependencies including Prisma, TanStack Query, Tailwind CSS, NextAuth.js, and Zod",
+            "dependencies": [],
+            "details": "Run `npx create-next-app@latest --typescript --tailwind --eslint --app` to create project structure. Install dependencies: `npm install prisma @prisma/client @tanstack/react-query @tanstack/react-query-devtools next-auth zod @hookform/resolvers`. Initialize Prisma with `npx prisma init`. Configure TypeScript with strict settings in tsconfig.json",
+            "status": "pending",
+            "testStrategy": "Verify project builds successfully with `npm run build` and all dependencies are properly installed"
+          },
+          {
+            "id": 2,
+            "title": "Configure ESLint strict rules and development tooling",
+            "description": "Setup ESLint with strict configuration rules and configure Vitest for testing with coverage targets",
+            "dependencies": [
+              1
+            ],
+            "details": "Install ESLint plugins: `npm install -D @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-config-next`. Configure .eslintrc.json with strict rules. Install Vitest: `npm install -D vitest @vitejs/plugin-react jsdom @testing-library/react @testing-library/jest-dom`. Create vitest.config.ts with coverage settings targeting ≥90% coverage",
+            "status": "pending",
+            "testStrategy": "Run `npm run lint` to verify ESLint configuration and `npm run test` to confirm Vitest setup"
+          },
+          {
+            "id": 3,
+            "title": "Setup environment configuration and security",
+            "description": "Create environment variable configuration with proper security practices including JWT secret generation",
+            "dependencies": [
+              2
+            ],
+            "details": "Create .env.example with all required variables: DATABASE_URL, NEXTAUTH_SECRET, NEXTAUTH_URL, JWT_SECRET. Generate secure JWT secret with ≥64 hex characters using crypto.randomBytes(32).toString('hex'). Document all environment variables with descriptions. Setup .env.local for development",
+            "status": "pending",
+            "testStrategy": "Verify .env.example contains all required variables and JWT secret meets length requirements"
+          },
+          {
+            "id": 4,
+            "title": "Configure Docker containerization",
+            "description": "Create Docker configuration for consistent development and production environments",
+            "dependencies": [
+              3
+            ],
+            "details": "Create Dockerfile with multi-stage build: development stage with all dependencies, production stage with optimized build. Create .dockerignore excluding node_modules, .git, .env files. Create docker-compose.yml for local development with database service. Ensure container runs Next.js app on port 3000",
+            "status": "pending",
+            "testStrategy": "Build Docker image successfully and verify container runs application accessible on localhost:3000"
+          },
+          {
+            "id": 5,
+            "title": "Setup CI/CD pipeline and Fly.io deployment",
+            "description": "Configure GitHub Actions for automated testing and deployment to Fly.io with performance targets",
+            "dependencies": [
+              4
+            ],
+            "details": "Create .github/workflows/ci.yml with jobs for linting, testing, and building. Setup Fly.io configuration with `fly launch` and create fly.toml with deployment settings. Configure GitHub secrets for FLY_API_TOKEN. Setup deployment workflow targeting <60s deploy time with build caching and parallel jobs. Include automated tests in CI pipeline",
+            "status": "pending",
+            "testStrategy": "Verify GitHub Actions workflow runs successfully and deployment to Fly.io completes within 60 seconds"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Implement Authentication System",
+        "description": "Setup JWT-based authentication with sign-up, sign-in, and role-based access control",
+        "details": "Implement NextAuth.js or custom JWT auth with roles (editor, admin), create User model in Prisma schema, setup JWT secret validation (≥64 hex chars), implement rate limiting (10 req/min for auth endpoints), create sign-up/sign-in pages, setup middleware for protected routes, implement session management and token refresh",
+        "testStrategy": "Unit tests for auth functions, integration tests for login/signup flow, verify rate limiting works, test role-based access control, validate JWT token structure and expiration",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "Design and Implement Database Schema",
+        "description": "Create Prisma schema with Post model and required enums, setup database connection",
+        "details": "Implement exact Prisma schema from PRD: Post model with uuid id, title (VarChar 120), description, platform (TikTok/X/LinkedIn/Instagram), pillar (LifeStartup/HumanIntro/LifeInSF/IndustryInsights), publishDate DateTime, status (Draft/Scheduled/Published default Scheduled), imageUrl (VarChar 2048), createdAt/updatedAt. Setup database connection, run migrations, seed with sample data",
+        "testStrategy": "Verify schema generates correctly, test all enum values are accepted, validate field constraints (title length, imageUrl length), test database connection and migrations",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Build Core API Endpoints",
+        "description": "Implement REST API endpoints for CRUD operations on posts with proper validation",
+        "details": "Implement API routes: GET /api/posts with optional day=YYYY-MM-DD query filter (00:00-23:59 UTC), POST /api/posts with CreatePostDTO validation, PATCH /api/posts/:id with PartialPostDTO, DELETE /api/posts with [ids] array. Use Zod for request validation, ensure pillar & platform enum validation, publishDate must be ISO format. Add proper error handling and status codes (200, 201, 204)",
+        "testStrategy": "API integration tests for all endpoints, test date filtering accuracy, validate enum constraints, test bulk delete functionality, verify proper HTTP status codes and error responses",
+        "priority": "high",
+        "dependencies": [
+          2,
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Create Calendar View Component",
+        "description": "Build main calendar interface with month/week/list toggle and platform-colored dots",
+        "details": "Create calendar component with month/week/list view toggle, implement day cells with colored dots per platform (TikTok #FE2C55, X #1D9BF0, LinkedIn #0A66C2, Instagram #E1306C), ensure responsive design (collapses on <768px), use TanStack Query for data fetching with proper cache invalidation, implement date navigation, ensure first paint ≤200ms on M1 Air",
+        "testStrategy": "Test view toggles work correctly, verify dot colors match specification, test responsive behavior, measure first paint performance, test date navigation and data loading",
+        "priority": "high",
+        "dependencies": [
+          4
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Implement Day Drawer Functionality",
+        "description": "Create day drawer that shows scheduled posts for selected date with bulk operations",
+        "details": "Implement day drawer that opens on date click, shows only scheduled posts for selected day using GET /posts?day=YYYY-MM-DD, include bulk operations (duplicate, delete, shift +1 day), implement empty state with centered grey text 'No scheduled posts for this day', ensure drawer slides up on mobile (<768px), real-time updates with TanStack Query invalidation",
+        "testStrategy": "Test drawer opens/closes correctly, verify filtering by date works, test bulk operations, validate empty state display, test mobile responsive behavior",
+        "priority": "high",
+        "dependencies": [
+          5
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Build Post Creation and Editing Modal",
+        "description": "Create modal for adding and editing posts with rich text and validation",
+        "details": "Implement modal component with fields: title, description (rich text), platform dropdown, pillar dropdown, publishDate picker (ISO format), status selection, optional imageUrl input. Add form validation using Zod, ensure pillar/platform enums match canonical strings from PRD, implement create/update functionality with proper API calls, ensure modal is accessible and responsive",
+        "testStrategy": "Test form validation for all fields, verify enum values match PRD specification, test create and update operations, validate date picker ISO format output, test modal accessibility and responsive design",
+        "priority": "high",
+        "dependencies": [
+          4
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Implement Filtering and Search Functionality",
+        "description": "Add sidebar filters for platform and pillar with sticky behavior",
+        "details": "Create filter sidebar (desktop) or dropdown (mobile) for platform and pillar filtering, implement sticky filter state, integrate with TanStack Query for filtered data fetching, ensure filters persist across page refreshes, add clear filters option, implement responsive behavior for mobile",
+        "testStrategy": "Test all filter combinations work, verify sticky behavior persists, test mobile dropdown functionality, validate filter state persistence across refreshes",
+        "priority": "medium",
+        "dependencies": [
+          5,
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Implement Real-time Updates and Drag-and-Drop",
+        "description": "Add real-time updates using TanStack Query and drag-and-drop functionality for date changes",
+        "details": "Implement TanStack Query with proper cache invalidation keyed by [posts, YYYY-MM-DD], add drag-and-drop functionality for moving posts between dates (PATCH publishDate), ensure calendar re-renders in <200ms, implement optimistic updates, add proper error handling and rollback on failure",
+        "testStrategy": "Test real-time updates work across browser tabs, verify drag-and-drop functionality, measure re-render performance (<200ms), test optimistic updates and error rollback",
+        "priority": "medium",
+        "dependencies": [
+          6,
+          7
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Apply Branding and UI Polish",
+        "description": "Implement Final Round AI branding, styling, and responsive design according to UI guidelines",
+        "details": "Apply brand colors (Navy #001E3C, Emerald #00B37E), implement header with fra-logo.svg (left) and title (right), height 56px, logo navigation to home, use neutral clean design (#f8fafc background, border-gray-100, shadow-sm), remove avatar images, ensure responsive design with sidebar collapse, implement proper typography hierarchy, add loading states and transitions",
+        "testStrategy": "Visual regression testing for brand compliance, test responsive breakpoints, verify logo navigation, test loading states, validate color contrast for accessibility, cross-browser compatibility testing",
+        "priority": "medium",
+        "dependencies": [
+          5,
+          6,
+          7,
+          8
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-07-01T03:27:02.607Z",
+      "updated": "2025-07-01T03:27:02.607Z",
+      "description": "Tasks for master context"
+    }
+  }
+}

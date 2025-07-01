@@ -1,0 +1,31 @@
+<svg width="120" height="32" viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Modern, minimalist logo design for Final Round AI -->
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6366f1;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Icon: Stylized "F" with circuit pattern -->
+  <g transform="translate(0, 4)">
+    <!-- Main F shape -->
+    <path d="M2 2h14v3H6v4h8v3H6v6H2V2z" fill="url(#gradient)"/>
+    <!-- Circuit dots -->
+    <circle cx="18" cy="4" r="1.5" fill="url(#gradient)" opacity="0.8"/>
+    <circle cx="18" cy="8" r="1" fill="url(#gradient)" opacity="0.6"/>
+    <circle cx="18" cy="12" r="1.5" fill="url(#gradient)" opacity="0.8"/>
+    <!-- Connecting lines -->
+    <path d="M16 4h2M16 8h2M16 12h2" stroke="url(#gradient)" stroke-width="1" opacity="0.5"/>
+  </g>
+  
+  <!-- Text: "Final Round AI" -->
+  <g transform="translate(28, 8)" fill="currentColor">
+    <text x="0" y="6" font-family="system-ui, -apple-system, sans-serif" font-size="7" font-weight="600">
+      Final Round
+    </text>
+    <text x="0" y="15" font-family="system-ui, -apple-system, sans-serif" font-size="6" font-weight="500" opacity="0.8">
+      AI
+    </text>
+  </g>
+</svg>

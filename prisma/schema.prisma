@@ -1,0 +1,153 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Platform {
+  TikTok
+  X
+  LinkedIn
+  Instagram
+}
+
+enum Pillar {
+  Life
+  StartupRun
+  IndustryInsights
+  ProductUpdates
+}
+
+enum Status {
+  Draft
+  Scheduled
+  Published
+}
+
+enum UserRole {
+  admin
+  editor
+  viewer
+}
+
+model User {
+  id          String    @id @default(cuid())
+  email       String    @unique
+  password    String
+  name        String
+  avatarUrl   String?
+  role        UserRole  @default(editor)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  posts       Post[]    @relation("PostAssignee")
+  comments    Comment[]
+  mentions    Mention[]
+  sessions    Session[]
+
+  @@index([email])
+}
+
+model Session {
+  id          String   @id @default(cuid())
+  userId      String
+  token       String   @unique
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([userId])
+}
+
+model Post {
+  id            String    @id @default(cuid())
+  title         String
+  description   String    @db.Text
+  platform      Platform
+  pillar        Pillar
+  publishDate   DateTime
+  status        Status    @default(Scheduled)
+  imageUrl      String?
+  assigneeId    String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  assignee      User?     @relation("PostAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  comments      Comment[]
+  attachments   Attachment[]
+
+  @@index([publishDate, status])
+  @@index([platform])
+  @@index([pillar])
+  @@index([assigneeId])
+}
+
+model Comment {
+  id          String    @id @default(cuid())
+  content     String    @db.Text
+  postId      String
+  authorId    String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  post        Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author      User      @relation(fields: [authorId], references: [id])
+  mentions    Mention[]
+
+  @@index([postId])
+  @@index([authorId])
+}
+
+model Mention {
+  id          String    @id @default(cuid())
+  commentId   String
+  userId      String
+  createdAt   DateTime  @default(now())
+
+  // Relations
+  comment     Comment   @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id])
+
+  @@unique([commentId, userId])
+  @@index([userId])
+}
+
+model Attachment {
+  id          String    @id @default(cuid())
+  postId      String
+  fileName    String
+  fileUrl     String
+  fileSize    Int
+  mimeType    String
+  createdAt   DateTime  @default(now())
+
+  // Relations
+  post        Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+}
+
+model JobLog {
+  id          String    @id @default(cuid())
+  jobType     String
+  jobData     Json
+  status      String
+  error       String?
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  @@index([jobType, status])
+  @@index([createdAt])
+}

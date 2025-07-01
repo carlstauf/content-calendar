@@ -1,0 +1,180 @@
+Product Requirements Document
+
+Project: Final Round AI – “Content Calendar”
+Version: 1.2
+Date: 30 June 2025
+Author: <your name>
+
+⸻
+
+1 Executive Summary
+
+Final Round AI publishes across TikTok, X, LinkedIn and Instagram. Planning in Notion + spreadsheets causes gaps, last-minute scrambles and no single source of truth.
+The Content Calendar delivers a calendar-first workflow, AI-assisted planning and instant collaboration—tailored to the four content pillars below—while keeping cost and complexity near zero.
+
+⸻
+
+2 Content Pillars & Sub-Themes
+
+Pillar	Sub-themes
+Life at a Startup	• Finding an Internship • Product-Prep (Mock Interview, Q&A Product, Résumé Builder, AI Job Hunter)
+Human and Introduction	• Company / Behind-the-Scenes • How We Operate • Who We Are • The Future We’re Creating
+Life in SF	• Street Interviews • Local College Interviews • Other Interviews
+Industry Insights	• AI trends, research, market moves
+
+These strings are canonical; validation will reject anything else.
+
+⸻
+
+3 Objectives & Key Results
+
+Objective	Key Result	Target @ 90 days
+Adopt internally	Weekly active users	≥ 90 % of Marketing & Product
+Zero “content-drought” days	Calendar days without a scheduled post	0
+Reduce scheduling effort	Median “idea → scheduled” time	< 90 seconds
+Predictable cadence	On-time publish rate	> 97 %
+
+
+⸻
+
+4 Personas & JTBD
+
+Persona	“Jobs-to-be-Done”
+Sarah – Content Marketer	“See gaps, drag to fill, guarantee pillar coverage.”
+Raj – Growth PM	“Rapid reporting on pillar/platform performance.”
+Jess – Cofounder	“Confidence in brand voice without micromanaging.”
+
+
+⸻
+
+5 Scope
+
+5.1 Must-Have (MVP)
+	1.	Calendar – Month / Week / List toggle; per-day dot per post (colour = platform).
+	2.	Day Drawer – Clicking a date shows Scheduled posts for that day only; bulk duplicate / delete / shift +1 day.
+	3.	Add / Edit Post Modal – Title, description (rich), platform, pillar, publishDate (ISO), status, imageUrl (optional).
+	4.	Filters – Sidebar (desktop) or dropdown (mobile) for platform + pillar; sticky.
+	5.	Real-time Updates – TanStack Query invalidates list on create / update / date-change.
+	6.	Auth – Sign-up / Sign-in / JWT; roles: editor, admin.
+	7.	Branding – Navy #001E3C & Emerald #00B37E, fra-logo.svg in header, no avatar images in lists.
+
+5.2 Nice-to-Have
+	•	GPT-4o “best publish time” hint.
+	•	Slack webhook on publish success.
+	•	Supabase storage for uploaded images.
+
+5.3 Out of Scope
+	•	Multi-tenant billing
+	•	Full digital-asset manager
+	•	i18n / localisation
+
+⸻
+
+6 User Stories (abridged)
+
+Pri	Story	Acceptance
+P0	Create post → appears in drawer & badge instantly.	201 response, drawer shows item, day dot increments.
+P0	Click a date → see only Scheduled posts for that day.	GET /posts?day=YYYY-MM-DD returns filtered list.
+P1	Drag LinkedIn post from Monday to Tuesday.	PATCH publishDate; calendar re-renders in < 200 ms.
+
+
+⸻
+
+7 Functional Requirements
+
+ID	Requirement
+API-1	GET /api/posts?day=YYYY-MM-DD → Scheduled posts between 00:00–23:59 UTC for that day.
+API-2	POST /api/posts validates pillar & platform enums; publishDate must be ISO.
+FE-1	usePosts hook keyed by [posts, YYYY-MM-DD].
+FE-2	Drawer empty-state: centred grey text “No scheduled posts for this day.”
+FE-3	Logo left, title right; header height 56 px; click logo → navigates home.
+
+
+⸻
+
+8 Non-Functional
+	•	Performance: First paint ≤ 200 ms on M1 Air.
+	•	Security: JWT secret ≥ 64 hex chars; rate-limit auth 10 req/min.
+	•	Dev XP: ESLint strict; Vitest ≥ 90 % line coverage; CI in GitHub Actions.
+	•	Ops: /healthz returns 200; Fly.io deploy < 60 s.
+
+⸻
+
+9 Data Model (Prisma excerpt)
+
+model Post {
+  id          String   @id @default(uuid())
+  title       String   @db.VarChar(120)
+  description String?
+  platform    Platform
+  pillar      Pillar
+  publishDate DateTime
+  status      Status   @default(Scheduled)
+  imageUrl    String?  @db.VarChar(2048)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum Platform { TikTok X LinkedIn Instagram }
+enum Pillar {
+  LifeStartup
+  HumanIntro
+  LifeInSF
+  IndustryInsights
+}
+enum Status { Draft Scheduled Published }
+
+
+⸻
+
+10 API Contract
+
+Method	Path	Query / Body	Returns
+GET	/api/posts	day=YYYY-MM-DD (optional)	200 Post[]
+POST	/api/posts	CreatePostDTO	201 Post
+PATCH	/api/posts/:id	PartialPostDTO	200 Post
+DELETE	/api/posts	[ids] array	204
+
+
+⸻
+
+11 UX / UI Guidelines
+	•	Neutral, clean: #f8fafc background; cards border-gray-100 + shadow-sm.
+	•	No avatars: remove people icons; focus on text hierarchy.
+	•	Responsive: Sidebar collapses; drawer slides up on < 768 px.
+	•	Calendar dot colours: TikTok #FE2C55, X #1D9BF0, LinkedIn #0A66C2, Instagram #E1306C.
+
+⸻
+
+12 Timeline
+
+Day	Milestone
+0	Kick-off & repo scaffold
+2	Auth, Prisma schema, Zod config validation
+4	Calendar view, day drawer, GET filter
+5	Post creation modal, real-time invalidation
+6	UI polish, logo, empty state
+7	Internal demo & KPI instrumentation
+
+
+⸻
+
+13 Risks & Mitigations
+
+Risk	Impact	Mitigation
+Date parsing errors	Medium	Front-end always sends .toISOString(); backend uses z.coerce.date().
+Missing env vars	High	Zod fails fast with explicit message.
+pino-pretty missing in prod	Low	Prod log transport set to "silent".
+
+
+⸻
+
+14 Open Questions
+	1.	Allow editing a Published post?
+	2.	Need approval workflow beyond admin/editor?
+	3.	Audit trail or versioning required for compliance?
+
+⸻
+
+Stakeholders: CMO, Head of Growth, Engineering Lead
+Sign-off target: 3 July 2025
