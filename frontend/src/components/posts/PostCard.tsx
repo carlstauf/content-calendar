@@ -34,7 +34,7 @@ export default function PostCard({ post, onClick, compact = false }: PostCardPro
   return (
     <button
       onClick={onClick}
-      className="w-full text-left card p-4 hover:shadow-md transition-shadow group"
+      className="w-full text-left card p-4 hover:border-primary-600 transition-colors group"
     >
       <div className="flex items-start justify-between mb-2">
         <div className="flex-1">

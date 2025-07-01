@@ -61,7 +61,7 @@ export default function DayDetailDrawer({
                 leaveTo="translate-x-full"
               >
                 <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
-                  <div className="flex h-full flex-col bg-white dark:bg-gray-800 shadow-xl">
+                  <div className="flex h-full flex-col bg-white dark:bg-gray-800 border-l-2 border-gray-300 dark:border-gray-700">
                     <div className="px-4 py-6 sm:px-6">
                       <div className="flex items-start justify-between">
                         <Dialog.Title className="text-lg font-medium text-gray-900 dark:text-white">
@@ -101,7 +101,7 @@ export default function DayDetailDrawer({
                               {data?.posts.map((post) => (
                                 <div
                                   key={post.id}
-                                  className="bg-white dark:bg-gray-700 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-gray-600 overflow-hidden"
+                                  className="bg-white dark:bg-gray-700 rounded-md border-2 border-gray-300 dark:border-gray-600 overflow-hidden hover:border-primary-600 transition-colors"
                                 >
                                   <PostCard
                                     post={post}

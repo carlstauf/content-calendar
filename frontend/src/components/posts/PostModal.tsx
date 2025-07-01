@@ -69,6 +69,7 @@ export default function PostModal({ isOpen, onClose, post, defaultDate }: PostMo
     // Format data for API
     const formattedData = {
       ...data,
+      description: data.description, // Ensure description is passed as-is
       publishDate: new Date(data.publishDate).toISOString(),
       imageUrl: data.imageUrl?.trim() || undefined
     }
@@ -108,7 +109,7 @@ export default function PostModal({ isOpen, onClose, post, defaultDate }: PostMo
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl">
+              <Dialog.Panel className="relative transform overflow-hidden rounded-md bg-white dark:bg-gray-800 text-left border-2 border-gray-300 dark:border-gray-700 transition-all sm:my-8 sm:w-full sm:max-w-2xl">
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <div className="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="flex items-center justify-between mb-4">
