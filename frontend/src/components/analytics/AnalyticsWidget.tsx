@@ -9,6 +9,9 @@ interface AnalyticsWidgetProps {
 }
 
 export default function AnalyticsWidget({ title, value, description, trend }: AnalyticsWidgetProps) {
+  // Handle null/undefined values gracefully
+  const displayValue = value !== null && value !== undefined ? value : 'N/A'
+  
   return (
     <div className="card p-4">
       <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -16,7 +19,7 @@ export default function AnalyticsWidget({ title, value, description, trend }: An
       </p>
       <div className="mt-1 flex items-baseline justify-between">
         <p className="text-2xl font-semibold text-gray-900 dark:text-white">
-          {value}
+          {displayValue}
         </p>
         {trend && (
           <p

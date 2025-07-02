@@ -59,8 +59,9 @@ async function start() {
     await server.register(postRoutes, { prefix: '/api/posts' })
     await server.register(commentRoutes, { prefix: '/api/comments' })
 
-    // Health check
+    // Health check endpoints
     server.get('/health', async () => ({ status: 'ok' }))
+    server.get('/api/health', async () => ({ status: 'ok', timestamp: new Date().toISOString() }))
 
     await server.listen({ port: config.port, host: '0.0.0.0' })
     

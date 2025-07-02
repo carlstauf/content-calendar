@@ -10,8 +10,8 @@ export interface Post {
   id: string
   title: string
   description: string
-  platform: Platform
-  pillar: Pillar
+  platform?: Platform
+  pillar?: Pillar
   publishDate: string
   status: Status
   imageUrl?: string
@@ -44,7 +44,7 @@ export interface Mention {
 }
 
 export type Platform = 'TikTok' | 'X' | 'LinkedIn' | 'Instagram'
-export type Pillar = 'Life' | 'StartupRun' | 'IndustryInsights' | 'ProductUpdates'
+export type Pillar = 'Life_at_a_Startup' | 'How_to_Build_and_Run_a_Startup' | 'Industry_Insights' | 'Product_Updates'
 export type Status = 'Draft' | 'Scheduled' | 'Published'
 
 export interface PostFilters {

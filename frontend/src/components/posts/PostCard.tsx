@@ -1,6 +1,6 @@
 import { format } from 'date-fns'
 import { Post } from '@/types'
-import { cn, getPlatformColor, formatTime } from '@/lib/utils'
+import { cn, getPlatformColor, formatTime, formatPillarLabel } from '@/lib/utils'
 import { ClockIcon, UserIcon, ChatBubbleLeftIcon, PhotoIcon } from '@heroicons/react/24/outline'
 
 interface PostCardProps {
@@ -17,7 +17,7 @@ export default function PostCard({ post, onClick, compact = false }: PostCardPro
         className="w-full text-left p-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-primary-500 transition-colors group"
       >
         <div className="flex items-start space-x-2">
-          <div className={cn('w-1 h-full rounded-full', getPlatformColor(post.platform))} />
+          <div className={cn('w-1 h-full rounded-full', post.platform ? getPlatformColor(post.platform) : 'bg-gray-400')} />
           <div className="flex-1 min-w-0">
             <p className="text-sm font-bold text-gray-900 dark:text-white truncate group-hover:text-primary-600 leading-tight">
               {post.title}
@@ -42,10 +42,12 @@ export default function PostCard({ post, onClick, compact = false }: PostCardPro
             {post.title}
           </h4>
           <div className="flex items-center space-x-3 mt-1 text-xs text-gray-500 dark:text-gray-400">
-            <span className={cn('px-2 py-0.5 rounded-full text-white', getPlatformColor(post.platform))}>
-              {post.platform}
-            </span>
-            <span>{post.pillar}</span>
+            {post.platform && (
+              <span className={cn('px-2 py-0.5 rounded-full text-white', getPlatformColor(post.platform))}>
+                {post.platform}
+              </span>
+            )}
+            {post.pillar && <span>{formatPillarLabel(post.pillar)}</span>}
           </div>
         </div>
         

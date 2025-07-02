@@ -27,7 +27,7 @@ export default function WeekView({ currentDate, filters, onEditPost }: WeekViewP
     [weekStart, weekEnd]
   )
 
-  const { data } = usePosts({
+  const { data, isLoading } = usePosts({
     ...filters,
     startDate: weekStart.toISOString(),
     endDate: weekEnd.toISOString(),
@@ -48,8 +48,21 @@ export default function WeekView({ currentDate, filters, onEditPost }: WeekViewP
     return map
   }, [data?.posts])
 
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="card p-8 text-center">
+        <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">Loading week view...</p>
+      </div>
+    )
+  }
+
+  // Check if there are any posts for the week
+  const hasAnyPosts = data?.posts && data.posts.length > 0
+
   return (
-    <div className="card overflow-hidden">
+    <div className="card overflow-hidden relative">
       <div className="grid grid-cols-7 gap-4 p-4">
         {days.map((day) => {
           const dateKey = format(day, 'yyyy-MM-dd')
@@ -78,19 +91,39 @@ export default function WeekView({ currentDate, filters, onEditPost }: WeekViewP
               </div>
 
               <div className="space-y-2 min-h-[400px]">
-                {dayPosts.map((post) => (
-                  <PostCard
-                    key={post.id}
-                    post={post}
-                    onClick={() => onEditPost(post)}
-                    compact
-                  />
-                ))}
+                {dayPosts.length > 0 ? (
+                  dayPosts.map((post) => (
+                    <PostCard
+                      key={post.id}
+                      post={post}
+                      onClick={() => onEditPost(post)}
+                      compact
+                    />
+                  ))
+                ) : (
+                  <p className="text-xs text-gray-400 dark:text-gray-500 text-center mt-4">
+                    No posts
+                  </p>
+                )}
               </div>
             </div>
           )
         })}
       </div>
+
+      {/* Empty state overlay */}
+      {!hasAnyPosts && (
+        <div className="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+          <div className="text-center">
+            <p className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+              No posts scheduled this week
+            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Start planning your content for the week of {format(weekStart, 'MMM d, yyyy')}
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
