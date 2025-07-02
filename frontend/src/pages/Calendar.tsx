@@ -15,7 +15,7 @@ export default function Calendar() {
   
   const { isDrawerOpen, setDrawerOpen } = useUIStore()
 
-  const handleCreatePost = (date?: Date) => {
+  const handleCreatePost = () => {
     setEditingPost(null)
     setIsPostModalOpen(true)
   }

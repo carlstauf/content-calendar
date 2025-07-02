@@ -36,7 +36,6 @@ export default function CalendarView({
     case 'list':
       return (
         <ListView
-          currentDate={currentDate}
           filters={filters}
           onEditPost={onEditPost}
         />

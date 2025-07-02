@@ -54,6 +54,7 @@ export interface PostFilters {
   assigneeId?: string
   startDate?: string
   endDate?: string
+  day?: string
 }
 
 export interface PaginatedResponse<T> {

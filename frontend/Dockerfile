@@ -1,38 +1,30 @@
-FROM node:20-alpine AS builder
+# Build stage
+FROM node:20-alpine as builder
 
-# Install pnpm
+# Enable corepack for pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Set working directory
 WORKDIR /app
 
-# Copy package files
-COPY package.json pnpm-lock.yaml ./
+# Copy workspace files from root
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY backend/package.json ./backend/
+COPY frontend/package.json ./frontend/
 
 # Install dependencies
-RUN pnpm install --frozen-lockfile
+RUN pnpm install
 
-# Copy source code
-COPY . .
+# Copy frontend source
+COPY frontend ./frontend
 
-# Build the application
-# API URL will be injected at build time
-ARG VITE_API_URL
-ENV VITE_API_URL=$VITE_API_URL
+WORKDIR /app/frontend
 
-RUN pnpm build
+# Build the app
+RUN pnpm run build
 
 # Production stage
 FROM nginx:alpine
-
-# Copy built assets from builder stage
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Copy nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Expose port
+COPY --from=builder /app/frontend/dist /usr/share/nginx/html
+COPY ./frontend/nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
-
-# Start nginx
 CMD ["nginx", "-g", "daemon off;"]

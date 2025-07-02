@@ -3,16 +3,14 @@ import { format } from 'date-fns'
 import { usePosts, useBulkAction } from '@/hooks/usePosts'
 import { Post, PostFilters } from '@/types'
 import { cn, formatPillarLabel } from '@/lib/utils'
-import PostCard from '../posts/PostCard'
 import { TrashIcon, CheckIcon, ClockIcon } from '@heroicons/react/24/outline'
 
 interface ListViewProps {
-  currentDate: Date
   filters: PostFilters
   onEditPost: (post: Post) => void
 }
 
-export default function ListView({ currentDate, filters, onEditPost }: ListViewProps) {
+export default function ListView({ filters, onEditPost }: ListViewProps) {
   const [selectedPosts, setSelectedPosts] = useState<Set<string>>(new Set())
   const [page, setPage] = useState(1)
   
@@ -35,10 +33,10 @@ export default function ListView({ currentDate, filters, onEditPost }: ListViewP
   }
 
   const toggleSelectAll = () => {
-    if (selectedPosts.size === data?.posts.length) {
+    if (selectedPosts.size === (data?.posts?.length || 0)) {
       setSelectedPosts(new Set())
     } else {
-      setSelectedPosts(new Set(data?.posts.map((p) => p.id)))
+      setSelectedPosts(new Set(data?.posts?.map((p) => p.id) || []))
     }
   }
 
@@ -113,7 +111,7 @@ export default function ListView({ currentDate, filters, onEditPost }: ListViewP
                 <th className="text-left p-4 w-10">
                   <input
                     type="checkbox"
-                    checked={selectedPosts.size === data?.posts.length}
+                    checked={selectedPosts.size === (data?.posts?.length || 0)}
                     onChange={toggleSelectAll}
                     className="rounded border-gray-300 dark:border-gray-600"
                   />
@@ -139,7 +137,7 @@ export default function ListView({ currentDate, filters, onEditPost }: ListViewP
               </tr>
             </thead>
             <tbody>
-              {data.posts.map((post) => (
+              {data?.posts?.map((post) => (
                 <tr
                   key={post.id}
                   className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"

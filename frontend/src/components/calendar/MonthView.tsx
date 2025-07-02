@@ -7,7 +7,6 @@ import {
   eachDayOfInterval,
   format,
   isSameMonth,
-  isSameDay,
   isToday,
 } from 'date-fns'
 import { useQueryClient } from '@tanstack/react-query'
@@ -15,7 +14,6 @@ import { usePosts } from '@/hooks/usePosts'
 import { Post, PostFilters } from '@/types'
 import { cn, getPlatformColor } from '@/lib/utils'
 import { useUIStore } from '@/stores/ui'
-import PostCard from '../posts/PostCard'
 
 interface MonthViewProps {
   currentDate: Date

@@ -39,8 +39,8 @@ services:
 
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./frontend/Dockerfile
       args:
         VITE_API_URL: http://localhost:4000/api
     container_name: content-calendar-frontend

@@ -6,7 +6,6 @@ import {
   NumberedListIcon,
   LinkIcon 
 } from '@heroicons/react/24/outline'
-import { cn } from '@/lib/utils'
 
 interface RichTextEditorProps {
   value: string

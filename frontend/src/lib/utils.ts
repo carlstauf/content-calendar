@@ -21,7 +21,8 @@ export function formatTime(date: Date | string) {
   }).format(new Date(date))
 }
 
-export function getPlatformColor(platform: string) {
+export function getPlatformColor(platform: string | undefined) {
+  if (!platform) return 'bg-gray-500'
   const colors = {
     TikTok: 'bg-pink-500',
     X: 'bg-gray-900',

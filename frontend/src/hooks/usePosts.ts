@@ -24,8 +24,7 @@ export function usePosts(filters?: PostFilters & { page?: number; limit?: number
       })
       return data
     },
-    staleTime: 30_000,
-    keepPreviousData: true
+    staleTime: 30_000
   })
 }
 

@@ -8,7 +8,7 @@ const mockPost: Post = {
   title: 'Test Post',
   description: '<p>Test description</p>',
   platform: 'LinkedIn',
-  pillar: 'ProductUpdates',
+  pillar: 'Product_Updates',
   publishDate: '2024-01-15T10:00:00Z',
   status: 'Scheduled',
   createdAt: '2024-01-01T00:00:00Z',
@@ -33,7 +33,7 @@ describe('PostCard', () => {
     expect(screen.getByText('Test Post')).toBeInTheDocument()
     expect(screen.getByText('Test description')).toBeInTheDocument()
     expect(screen.getByText('LinkedIn')).toBeInTheDocument()
-    expect(screen.getByText('ProductUpdates')).toBeInTheDocument()
+    expect(screen.getByText('Product Updates')).toBeInTheDocument()
     expect(screen.getByText('Scheduled')).toBeInTheDocument()
     expect(screen.getByText('John Doe')).toBeInTheDocument()
     expect(screen.getByText('5')).toBeInTheDocument()

@@ -4,7 +4,6 @@ import {
   endOfWeek,
   eachDayOfInterval,
   format,
-  isSameDay,
   isToday,
 } from 'date-fns'
 import { usePosts } from '@/hooks/usePosts'

@@ -1,4 +1,3 @@
-import { format } from 'date-fns'
 import { Post } from '@/types'
 import { cn, getPlatformColor, formatTime, formatPillarLabel } from '@/lib/utils'
 import { ClockIcon, UserIcon, ChatBubbleLeftIcon, PhotoIcon } from '@heroicons/react/24/outline'

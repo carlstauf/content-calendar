@@ -2,7 +2,6 @@ import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { format } from 'date-fns'
 import { XMarkIcon, PlusIcon } from '@heroicons/react/24/outline'
-import { useQueryClient } from '@tanstack/react-query'
 import { usePosts, usePostAnalytics } from '@/hooks/usePosts'
 import { useUIStore } from '@/stores/ui'
 import { Post } from '@/types'
@@ -24,12 +23,11 @@ export default function DayDetailDrawer({
 }: DayDetailDrawerProps) {
   const { selectedDate } = useUIStore()
   const { data: analytics } = usePostAnalytics()
-  const queryClient = useQueryClient()
 
   // Query posts for the selected date with optimized cache key
   const { data, isLoading } = usePosts({
     limit: 50,
-  }, selectedDate)
+  }, selectedDate || undefined)
 
   if (!selectedDate) return null
 
