@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { format } from 'date-fns'
 import { usePosts, useBulkAction } from '@/hooks/usePosts'
 import { Post, PostFilters } from '@/types'
-import { cn } from '@/lib/utils'
+import { cn, formatPillarLabel } from '@/lib/utils'
 import PostCard from '../posts/PostCard'
 import { TrashIcon, CheckIcon, ClockIcon } from '@heroicons/react/24/outline'
 
@@ -164,10 +164,10 @@ export default function ListView({ currentDate, filters, onEditPost }: ListViewP
                     </button>
                   </td>
                   <td className="p-4">
-                    <span className="text-sm">{post.platform}</span>
+                    <span className="text-sm">{post.platform || '-'}</span>
                   </td>
                   <td className="p-4">
-                    <span className="text-sm">{post.pillar}</span>
+                    <span className="text-sm">{formatPillarLabel(post.pillar) || '-'}</span>
                   </td>
                   <td className="p-4">
                     <p className="text-sm">{format(new Date(post.publishDate), 'MMM d, yyyy')}</p>
@@ -190,11 +190,17 @@ export default function ListView({ currentDate, filters, onEditPost }: ListViewP
                   <td className="p-4">
                     {post.assignee && (
                       <div className="flex items-center space-x-2">
-                        <img
-                          src={post.assignee.avatarUrl}
-                          alt={post.assignee.name}
-                          className="h-6 w-6 rounded-full"
-                        />
+                        {post.assignee.avatarUrl ? (
+                          <img
+                            src={post.assignee.avatarUrl}
+                            alt={post.assignee.name}
+                            className="h-6 w-6 rounded-full"
+                          />
+                        ) : (
+                          <div className="h-6 w-6 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center text-xs font-medium text-white">
+                            {post.assignee.name.charAt(0).toUpperCase()}
+                          </div>
+                        )}
                         <span className="text-sm">{post.assignee.name}</span>
                       </div>
                     )}

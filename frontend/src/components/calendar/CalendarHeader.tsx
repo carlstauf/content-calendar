@@ -127,10 +127,10 @@ export default function CalendarHeader({
           className="input py-1.5 text-sm"
         >
           <option value="">All Pillars</option>
-          <option value="Life">Life</option>
-          <option value="StartupRun">Startup Run</option>
-          <option value="IndustryInsights">Industry Insights</option>
-          <option value="ProductUpdates">Product Updates</option>
+          <option value="Life_at_a_Startup">Life at a Startup</option>
+          <option value="How_to_Build_and_Run_a_Startup">How to Build and Run a Startup</option>
+          <option value="Industry_Insights">Industry Insights</option>
+          <option value="Product_Updates">Product Updates</option>
         </select>
 
         <select

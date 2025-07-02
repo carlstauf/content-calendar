@@ -42,8 +42,8 @@ model Post {
   id          String       @id @default(cuid())
   title       String
   description String
-  platform    Platform
-  pillar      Pillar
+  platform    Platform?
+  pillar      Pillar?
   publishDate DateTime
   status      Status       @default(Scheduled)
   imageUrl    String?
@@ -121,10 +121,10 @@ enum Platform {
 }
 
 enum Pillar {
-  Life
-  StartupRun
-  IndustryInsights
-  ProductUpdates
+  Life_at_a_Startup @map("Life at a Startup")
+  How_to_Build_and_Run_a_Startup @map("How to Build and Run a Startup")
+  Industry_Insights @map("Industry Insights")
+  Product_Updates @map("Product Updates")
 }
 
 enum Status {

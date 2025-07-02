@@ -18,10 +18,10 @@ interface PostModalProps {
 interface PostForm {
   title: string
   description: string
-  platform: Platform
-  pillar: Pillar
+  platform?: Platform
+  pillar?: Pillar
   publishDate: string
-  status: Status
+  status?: Status
   imageUrl?: string
   assigneeId?: string
 }
@@ -71,7 +71,11 @@ export default function PostModal({ isOpen, onClose, post, defaultDate }: PostMo
       ...data,
       description: data.description, // Ensure description is passed as-is
       publishDate: new Date(data.publishDate).toISOString(),
-      imageUrl: data.imageUrl?.trim() || undefined
+      imageUrl: data.imageUrl?.trim() || undefined,
+      // Convert empty strings to undefined so they're not sent
+      platform: data.platform || undefined,
+      pillar: data.pillar || undefined,
+      status: data.status || undefined
     }
 
     if (post) {
@@ -167,17 +171,14 @@ export default function PostModal({ isOpen, onClose, post, defaultDate }: PostMo
                           <select
                             id="platform"
                             className="input mt-1"
-                            {...register('platform', { required: 'Platform is required' })}
+                            {...register('platform')}
                           >
-                            <option value="">Select platform</option>
+                            <option value="">No platform selected</option>
                             <option value="TikTok">TikTok</option>
                             <option value="X">X</option>
                             <option value="LinkedIn">LinkedIn</option>
                             <option value="Instagram">Instagram</option>
                           </select>
-                          {errors.platform && (
-                            <p className="mt-1 text-sm text-red-600">{errors.platform.message}</p>
-                          )}
                         </div>
 
                         <div>
@@ -187,17 +188,14 @@ export default function PostModal({ isOpen, onClose, post, defaultDate }: PostMo
                           <select
                             id="pillar"
                             className="input mt-1"
-                            {...register('pillar', { required: 'Pillar is required' })}
+                            {...register('pillar')}
                           >
-                            <option value="">Select pillar</option>
-                            <option value="Life">Life</option>
-                            <option value="StartupRun">Startup Run</option>
-                            <option value="IndustryInsights">Industry Insights</option>
-                            <option value="ProductUpdates">Product Updates</option>
+                            <option value="">No pillar selected</option>
+                            <option value="Life_at_a_Startup">Life at a Startup</option>
+                            <option value="How_to_Build_and_Run_a_Startup">How to Build and Run a Startup</option>
+                            <option value="Industry_Insights">Industry Insights</option>
+                            <option value="Product_Updates">Product Updates</option>
                           </select>
-                          {errors.pillar && (
-                            <p className="mt-1 text-sm text-red-600">{errors.pillar.message}</p>
-                          )}
                         </div>
                       </div>
 
@@ -224,15 +222,13 @@ export default function PostModal({ isOpen, onClose, post, defaultDate }: PostMo
                           <select
                             id="status"
                             className="input mt-1"
-                            {...register('status', { required: 'Status is required' })}
+                            {...register('status')}
                           >
+                            <option value="">Default (Scheduled)</option>
                             <option value="Draft">Draft</option>
                             <option value="Scheduled">Scheduled</option>
                             <option value="Published">Published</option>
                           </select>
-                          {errors.status && (
-                            <p className="mt-1 text-sm text-red-600">{errors.status.message}</p>
-                          )}
                         </div>
                       </div>
 

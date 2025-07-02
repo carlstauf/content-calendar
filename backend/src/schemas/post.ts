@@ -4,10 +4,10 @@ import { Platform, Pillar, Status } from '@prisma/client'
 export const createPostSchema = z.object({
   title: z.string().min(1).max(200),
   description: z.string().min(1),
-  platform: z.nativeEnum(Platform),
-  pillar: z.nativeEnum(Pillar),
+  platform: z.nativeEnum(Platform).optional(),
+  pillar: z.nativeEnum(Pillar).optional(),
   publishDate: z.coerce.date(),
-  status: z.nativeEnum(Status).optional(),
+  status: z.nativeEnum(Status).optional().default(Status.Scheduled),
   imageUrl: z.string().url().optional().or(z.literal('')),
   assigneeId: z.string().optional()
 })

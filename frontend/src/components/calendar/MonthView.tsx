@@ -37,7 +37,7 @@ export default function MonthView({ currentDate, filters, onEditPost }: MonthVie
     [calendarStart, calendarEnd]
   )
 
-  const { data } = usePosts({
+  const { data, isLoading } = usePosts({
     ...filters,
     startDate: calendarStart.toISOString(),
     endDate: calendarEnd.toISOString(),
@@ -64,8 +64,21 @@ export default function MonthView({ currentDate, filters, onEditPost }: MonthVie
     queryClient.invalidateQueries({ queryKey: ['posts', date.toISOString().slice(0,10)] })
   }
 
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="card p-8 text-center">
+        <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">Loading calendar...</p>
+      </div>
+    )
+  }
+
+  // Check if there are any posts for the entire month
+  const hasAnyPosts = data?.posts && data.posts.length > 0
+
   return (
-    <div className="card overflow-hidden">
+    <div className="card overflow-hidden relative">
       <div className="grid grid-cols-7 gap-px bg-gray-200 dark:bg-gray-700">
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
           <div
@@ -137,6 +150,20 @@ export default function MonthView({ currentDate, filters, onEditPost }: MonthVie
           )
         })}
       </div>
+
+      {/* Empty state overlay */}
+      {!hasAnyPosts && (
+        <div className="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+          <div className="text-center">
+            <p className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+              No posts scheduled
+            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Click on any day to create your first post for {format(currentDate, 'MMMM yyyy')}
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
